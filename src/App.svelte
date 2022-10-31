@@ -1,6 +1,4 @@
 <script>
-	import { onMount } from "svelte"
-
 	import { PROXY_URL } from "./const/const"
 	import WinnerList from "./lib/WinnerList.svelte"
 	import {
@@ -9,7 +7,7 @@
 		winningTickets,
 		numberOfPrizes,
 	} from "./store"
-
+	let url = ""
 	const generate = () => {
 		const ticketArr = Object.keys($participants).reduce((acc, name) => {
 			const { wins, paint, fair } = $participants[name]
@@ -58,7 +56,6 @@
 		return partObjects
 	}
 	const fetchLS = async () => {
-		const url = "https://www.longshanks.org/events/detail/?event=5335"
 		fetch(`${PROXY_URL}${url}`)
 			.then((response) => {
 				return response.text()
@@ -76,18 +73,25 @@
 				participants.set(getParticipantObjects(result))
 			})
 	}
-
-	onMount(async () => {
-		fetchLS()
-	})
 </script>
 
 <main>
+	<form class="content" on:submit|preventDefault={fetchLS}>
+		<label class="labelName"
+			>Event URL
+
+			<input class="nameInput" type="text" bind:value={url} />
+		</label>
+		<button class="submitBtn" type="submit" disabled={url.length < 1}
+			>Load participant list</button
+		>
+	</form>
+
 	<h2>Participant list</h2>
 	<form class="content" on:submit|preventDefault={generate}>
 		{#each Object.keys($participants) as name, i}
 			<label class="labelName"
-				>{i+1}
+				>{i + 1}
 
 				<input class="nameInput" type="text" value={name} />
 			</label>
@@ -109,11 +113,16 @@
 			<br />
 		{/each}
 		<label
-				>Number of Prizes
+			>Number of Prizes
 
-				<input type="number" bind:value={$numberOfPrizes} />
-			</label>
-		<button class="submitBtn" type="submit" disabled={$numberOfPrizes > Object.keys($participants).length}>Generate Tickets</button>
+			<input type="number" bind:value={$numberOfPrizes} />
+		</label>
+		<button
+			class="submitBtn"
+			type="submit"
+			disabled={$numberOfPrizes > Object.keys($participants).length}
+			>Generate Tickets</button
+		>
 	</form>
 
 	{#each $tickets as ticket}
