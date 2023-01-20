@@ -1,1 +1,1 @@
-export const PROXY_URL = "https://peaceful-ocean-23907.herokuapp.com/"
+export const PROXY_URL = "https://cors-anywhere-fz8d.onrender.com/"

@@ -65,7 +65,7 @@
 				const doc = parser.parseFromString(text, "text/html")
 				const result = [
 					...new Set(
-						Array.from(doc.querySelectorAll("div>span>a.player_link")).map(
+						Array.from(doc.querySelectorAll("div:first-of-type>span>a.player_link")).map(
 							(x) => x.innerHTML
 						)
 					),
