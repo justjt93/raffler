@@ -65,9 +65,9 @@
 				const doc = parser.parseFromString(text, "text/html")
 				const result = [
 					...new Set(
-						Array.from(doc.querySelectorAll("div:first-of-type>span>a.player_link")).map(
-							(x) => x.innerHTML
-						)
+						Array.from(
+							doc.querySelectorAll("div:first-of-type>span>a.player_link")
+						).map((x) => x.innerHTML)
 					),
 				]
 				participants.set(getParticipantObjects(result))
@@ -75,69 +75,78 @@
 	}
 </script>
 
-<main>
-	<form class="content" on:submit|preventDefault={fetchLS}>
-		<label class="labelName"
-			>Event URL
+<main class="grindContainer">
+	<div>
+		<h2>Tournament link</h2>
+		<form on:submit|preventDefault={fetchLS}>
+			<div class="formBottomRow">
+				<label class="labelName"
+					>Event URL
 
-			<input class="nameInput" type="text" bind:value={url} />
-		</label>
-		<button class="submitBtn" type="submit" disabled={url.length < 1}
-			>Load participant list</button
-		>
-	</form>
+					<input class="nameInput" type="text" bind:value={url} />
+				</label>
+				<button class="submitBtn" type="submit" disabled={url.length < 1}
+					>Load participant list</button
+				>
+			</div>
+		</form>
 
-	<h2>Participant list</h2>
-	<form class="content" on:submit|preventDefault={generate}>
-		{#each Object.keys($participants) as name, i}
-			<label class="labelName"
-				>{i + 1}
+		<h2>Participant list</h2>
+		<form on:submit|preventDefault={generate}>
+			{#each Object.keys($participants) as name, i}
+				<label class="labelName"
+					>{i + 1}
 
-				<input class="nameInput" type="text" value={name} />
-			</label>
-			<label
-				># wins
+					<input class="nameInput" type="text" value={name} />
+				</label>
+				<label
+					># wins
 
-				<input type="number" bind:value={$participants[name].wins} />
-			</label>
-			<label
-				># paint
+					<input type="number" bind:value={$participants[name].wins} />
+				</label>
+				<label
+					># paint
 
-				<input type="number" bind:value={$participants[name].paint} />
-			</label>
-			<label
-				># fair
+					<input type="number" bind:value={$participants[name].paint} />
+				</label>
+				<label
+					># fair
 
-				<input type="number" bind:value={$participants[name].fair} />
-			</label>
+					<input type="number" bind:value={$participants[name].fair} />
+				</label>
+				<br />
+			{/each}
 			<br />
+			<div class="formBottomRow ">
+				<label
+					>Number of Prizes
+
+					<input type="number" bind:value={$numberOfPrizes} />
+				</label>
+				<button
+					class="submitBtn"
+					type="submit"
+					disabled={$numberOfPrizes > Object.keys($participants).length}
+					>Run the raffle</button
+				>
+			</div>
+		</form>
+		<h2>Generated ticket list</h2>
+		{#each $tickets as ticket}
+			<p>{ticket}</p>
 		{/each}
-		<label
-			>Number of Prizes
-
-			<input type="number" bind:value={$numberOfPrizes} />
-		</label>
-		<button
-			class="submitBtn"
-			type="submit"
-			disabled={$numberOfPrizes > Object.keys($participants).length}
-			>Generate Tickets</button
-		>
-	</form>
-
-	{#each $tickets as ticket}
-		<p>{ticket}</p>
-	{/each}
-	<br />
+		<br />
+	</div>
 	<WinnerList />
 </main>
 
 <style>
-	/* .content {
+	.grindContainer {
 		display: grid;
-		grid-template-columns: 20% 80%;
+		grid-template-columns: 80% 20%;
 		grid-column-gap: 10px;
-	} */
+		text-align: left;
+	}
 	input {
 		width: 50px;
 	}
@@ -154,7 +163,13 @@
 		margin-right: 25px;
 	}
 
-	.submitBtn {
+	/* .submitBtn {
 		margin-top: 30px;
+	} */
+
+	.formBottomRow {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>
