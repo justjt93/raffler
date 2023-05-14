@@ -56,7 +56,7 @@
 		return partObjects
 	}
 	const fetchLS = async () => {
-		fetch(`${PROXY_URL}${url}`)
+		fetch(`${PROXY_URL}https://malifaux.longshanks.org/events/detail/panel_standings.php?event=${url}&section=player`)
 			.then((response) => {
 				return response.text()
 			})
@@ -81,7 +81,7 @@
 		<form on:submit|preventDefault={fetchLS}>
 			<div class="formBottomRow">
 				<label class="labelName"
-					>Event URL
+					>Event number
 
 					<input class="nameInput" type="text" bind:value={url} />
 				</label>
